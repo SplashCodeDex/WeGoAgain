@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Spacer(flex: 2),
+                const SizedBox(height: 80),
                 FadeTransition(
                   opacity: _fadeAnimation,
                   child: Text(
@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage>
                     style: GoogleFonts.lora(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD95C5C),
+                      color: const Color(0xFFF97C2D),
                     ),
                   ),
                 ),
@@ -104,22 +104,24 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(height: 48),
                 FadeTransition(
                   opacity: _fadeAnimation,
                   child: Padding(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '“',
-                          style: GoogleFonts.lora(
-                            fontSize: 48,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFFF97C2D),
+                        const Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            '“',
+                            style: TextStyle(
+                              fontSize: 48,
+                              color: Color(0xFFF97C2D),
+                              fontFamily: 'Lora',
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          textAlign: TextAlign.start,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -128,19 +130,20 @@ class _MyHomePageState extends State<MyHomePage>
                             textAlign: TextAlign.center,
                             style: GoogleFonts.poppins(
                               fontSize: 18,
-                              color: Colors.black87,
-                              height: 1.5,
+                              color: const Color(0xFF4A4A4A),
+                              height: 1.6,
                             ),
                           ),
                         ),
-                        Align(
+                        const Align(
                           alignment: Alignment.bottomRight,
                           child: Text(
                             '”',
-                            style: GoogleFonts.lora(
+                            style: TextStyle(
                               fontSize: 48,
+                              color: Color(0xFFF97C2D),
+                              fontFamily: 'Lora',
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFFF97C2D),
                             ),
                           ),
                         ),
@@ -148,11 +151,12 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 48),
                 SizedBox(
-                  height: 60,
+                  height: 52,
                   width: 220,
                   child: Stack(
+                    alignment: Alignment.center,
                     children: List.generate(4, (index) {
                       return Positioned(
                         left: index * 40.0,
@@ -164,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage>
                     }),
                   ),
                 ),
-                const Spacer(flex: 3),
+                const Spacer(),
                 const Footer(),
                 const SizedBox(height: 24),
               ],
