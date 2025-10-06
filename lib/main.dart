@@ -1,26 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'dart:math';
 
 void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
-      child: const MyApp(),
-    ),
-  );
-}
-
-class ThemeProvider with ChangeNotifier {
-  ThemeMode _themeMode = ThemeMode.system;
-
-  ThemeMode get themeMode => _themeMode;
-
-  void toggleTheme() {
-    _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-    notifyListeners();
-  }
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -28,158 +13,225 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color primarySeedColor = Colors.teal;
-
-    final TextTheme appTextTheme = TextTheme(
-      displayLarge: GoogleFonts.oswald(fontSize: 57, fontWeight: FontWeight.bold),
-      titleLarge: GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.w500),
-      bodyMedium: GoogleFonts.openSans(fontSize: 16, fontStyle: FontStyle.italic),
-      labelLarge: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500),
-    );
-
-    final ThemeData lightTheme = ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primarySeedColor,
-        brightness: Brightness.light,
+    return MaterialApp(
+      title: 'Portfolio App',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      textTheme: appTextTheme,
-      appBarTheme: AppBarTheme(
-        backgroundColor: primarySeedColor,
-        foregroundColor: Colors.white,
-        titleTextStyle: GoogleFonts.oswald(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: primarySeedColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          textStyle: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
-
-    final ThemeData darkTheme = ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primarySeedColor,
-        brightness: Brightness.dark,
-      ),
-      textTheme: appTextTheme,
-      appBarTheme: AppBarTheme(
-        backgroundColor: Colors.grey[900],
-        foregroundColor: Colors.white,
-        titleTextStyle: GoogleFonts.oswald(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.black,
-          backgroundColor: primarySeedColor.withOpacity(0.8),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          textStyle: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
-
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
-        return MaterialApp(
-          title: 'WeGoAgain',
-          theme: lightTheme,
-          darkTheme: darkTheme,
-          themeMode: themeProvider.themeMode,
-          home: const MyHomePage(),
-        );
-      },
+      home: const MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final List<String> _quotes = [
-    "The only way to do great work is to love what you do.",
-    "Believe you can and you're halfway there.",
-    "The future belongs to those who believe in the beauty of their dreams.",
-    "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-    "It does not matter how slowly you go as long as you do not stop.",
-    "The only limit to our realization of tomorrow will be our doubts of today.",
-    "The journey of a thousand miles begins with a single step.",
-    "Keep your face always toward the sunshine—and shadows will fall behind you.",
-    "What you get by achieving your goals is not as important as what you become by achieving your goals.",
-    "We go again."
-  ];
-
-  String _currentQuote = "The only way to do great work is to love what you do.";
-
-  void _newQuote() {
-    setState(() {
-      _currentQuote = _quotes[Random().nextInt(_quotes.length)];
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('WeGoAgain'),
-        actions: [
-          IconButton(
-            icon: Icon(themeProvider.themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode),
-            onPressed: () => themeProvider.toggleTheme(),
-            tooltip: 'Toggle Theme',
-          ),
-        ],
-      ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).colorScheme.primary,
-              Theme.of(context).colorScheme.secondary,
+              Color(0xFFFEECE2),
+              Color(0xFFF9D7D7),
             ],
           ),
         ),
-        child: Center(
+        child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 500),
-                  transitionBuilder: (Widget child, Animation<double> animation) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  child: Text(
-                    _currentQuote,
-                    key: ValueKey<String>(_currentQuote),
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Spacer(flex: 2),
+                Text(
+                  'I',
+                  style: GoogleFonts.lora(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFFD95C5C),
                   ),
                 ),
-                const SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: _newQuote,
-                  child: const Text('Another One'),
+                const SizedBox(height: 16),
+                ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [Color(0xFFF97C2D), Color(0xFFF95B5B)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ).createShader(bounds),
+                  child: Text(
+                    'Portfolio Building',
+                    style: GoogleFonts.poppins(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
+                const Spacer(),
+                GlassmorphicContainer(
+                  width: double.infinity,
+                  height: 350,
+                  borderRadius: 20,
+                  blur: 10,
+                  alignment: Alignment.center,
+                  border: 2,
+                  linearGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white.withOpacity(0.1),
+                      Colors.white.withOpacity(0.05),
+                    ],
+                    stops: const [0.1, 1],
+                  ),
+                  borderGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white.withOpacity(0.5),
+                      Colors.white.withOpacity(0.5),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '“',
+                          style: GoogleFonts.lora(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFFF97C2D),
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              'Act as a design mentor. Help me structure a beginner-friendly UX/UI design portfolio with 3 projects that showcase research, wireframes, and high-fidelity designs. Suggest how I can present each project clearly and compellingly.',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                color: Colors.black87,
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Text(
+                            '”',
+                            style: GoogleFonts.lora(
+                              fontSize: 48,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFFF97C2D),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                SizedBox(
+                  height: 60,
+                  child: Stack(
+                    children: List.generate(4, (index) {
+                      return Positioned(
+                        left: index * 40.0,
+                        child: _buildAvatarCard(index),
+                      );
+                    }),
+                  ),
+                ),
+                const Spacer(flex: 3),
+                const _Footer(),
+                const SizedBox(height: 24),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildAvatarCard(int index) {
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: SvgPicture.asset(
+          'assets/images/avatar${index + 1}.svg',
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+}
+
+class _Footer extends StatelessWidget {
+  const _Footer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 70,
+          height: 50,
+          decoration: const ShapeDecoration(
+            shape: StadiumBorder(
+              side: BorderSide(color: Colors.white, width: 2),
+            ),
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: NetworkImage('https://p19-pu-sign-useast8.tiktokcdn-us.com/tos-useast8-avt-0068-tx/04620b72b3884b65a52f55169f20305d~c5_100x100.jpeg?lk3s=a5d48078&x-expires=1744158000&x-signature=8bL%2F3Y133lF1s8uS16k5A5aYl2k%3D'),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Text(
+          'Kingsley Orji',
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+        ),
+        const Spacer(),
+        const FaIcon(FontAwesomeIcons.twitter, size: 18, color: Colors.black87),
+        const SizedBox(width: 8),
+        Text(
+          '@Desgnwitkinsly',
+          style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87),
+        ),
+        const SizedBox(width: 16),
+        const FaIcon(FontAwesomeIcons.instagram, size: 18, color: Colors.black87),
+        const SizedBox(width: 8),
+        Text(
+          '@Designwithkingsley',
+          style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87),
+        ),
+      ],
     );
   }
 }
