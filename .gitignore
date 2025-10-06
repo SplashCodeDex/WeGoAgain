@@ -44,3 +44,4 @@ gen/
 
 # Web
 /web/
+.dart_tool/
