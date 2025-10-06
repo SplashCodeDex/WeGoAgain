@@ -29,20 +29,28 @@ This project is a motivational and inspirational Flutter application. The primar
 ### Code Structure
 - **Modular Widgets:** The UI has been broken down into reusable widgets (`AvatarCard`, `Footer`), promoting a clean and maintainable codebase.
 - **Screen Separation:** The home page UI has been moved to its own file (`lib/screens/home_page.dart`), separating it from the main application entry point.
+- **Service Layer:** A `FirestoreService` (`lib/services/firestore_service.dart`) has been created to handle all interactions with Firestore, promoting a clean separation of concerns.
 
-## Current Task: Initial UI Implementation (Completed)
+### State Management & Theming
+- **ThemeProvider:** Implemented a `ChangeNotifierProvider` (`lib/providers/theme_provider.dart`) to manage the application's theme state.
+- **Light/Dark Mode:** Full support for light and dark themes, including a theme toggle in the `AppBar`.
+- **Material 3 Theming:** Utilizes `ThemeData` and `ColorScheme.fromSeed` to create consistent Material 3 compliant themes.
+- **Dynamic Text Colors:** Text colors now adapt based on the active theme (light or dark).
 
-1.  **Analyze Design:** Carefully studied the provided image to understand colors, fonts, spacing, and component styles.
-2.  **Code Review:** Inspected the initial `lib/main.dart` file to identify existing widgets and structure.
-3.  **Refactor UI:**
-    *   Removed the `GlassmorphicContainer` as it was not part of the final design.
-    *   Adjusted the `Container`'s `decoration` to match the soft background gradient from the image.
-    *   Re-styled the main quote text, removing the glassmorphism background and placing it directly on the main container.
-    *   Re-implemented the stack of four avatar cards, ensuring the overlap and shadow match the design.
-    *   Re-designed the footer, replacing the simple row with a pill-shaped `Container` that holds the user avatar and name, and separated the social media handles.
-4.  **Final Touches:** Fine-tuned padding, alignment, and font sizes to ensure the final result is a pixel-perfect match to the design.
-5.  **Add Animations:** Implemented fade-in and staggered slide-in animations to enhance the user experience.
-6.  **Modularize Code:** Refactored the UI into separate, reusable widgets and moved the home page to its own file.
+### Backend & Data
+- **Firebase Integration:** The application is connected to a Firebase project, with Firebase Core and Cloud Firestore integrated.
+- **Dynamic Content:** The app now fetches and displays motivational quotes from a "quotes" collection in Firestore.
+- **Content Management:** Includes a "Seed Database" feature to easily populate Firestore with initial quotes.
+- **Interactive Content:** A "Refresh" button allows users to fetch a new random quote on demand.
+
+## Current Task: Daily Motivational Quote Feature (Completed)
+
+1.  **Firebase Setup:** Added `firebase_core` and `cloud_firestore` dependencies and initialized Firebase in `main.dart`.
+2.  **Create FirestoreService:** Developed a service class to abstract all Firestore operations (adding and fetching quotes).
+3.  **Implement Quote Fetching:** Integrated the `FirestoreService` into `MyHomePage` to fetch and display a random quote.
+4.  **UI for Dynamic Content:** Replaced the static text with a dynamic display for the fetched quote and author.
+5.  **Add User Interactivity:** Implemented a `FloatingActionButton` to allow users to refresh the quote.
+6.  **Seed Database:** Added a utility to easily add a predefined list of quotes to the Firestore database.
 
 ---
 This blueprint will be updated as new features are added and changes are made to the application.
