@@ -8,12 +8,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:myapp/main.dart';
+import 'package:WeGoAgain/main.dart';
 
 void main() {
   testWidgets('Renders the portfolio UI', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const WeGoAgain());
 
     // Verify that the main title is present.
     expect(find.text('Portfolio Building'), findsOneWidget);

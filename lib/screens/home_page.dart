@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myapp/widgets/avatar_card.dart';
-import 'package:myapp/widgets/footer.dart';
+import 'package:WeGoAgain/widgets/avatar_card.dart';
+import 'package:WeGoAgain/widgets/footer.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -95,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage>
                       end: Alignment.centerRight,
                     ).createShader(bounds),
                     child: Text(
-                      'Portfolio Building',
+                      'WeGoAgain',
                       style: GoogleFonts.poppins(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -124,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage>
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24.0),
                           child: Text(
-                            'Act as a design mentor. Help me structure a beginner-friendly UX/UI design portfolio with 3 projects that showcase research, wireframes, and high-fidelity designs. Suggest how I can present each project clearly and compellingly.',
+                            'Act as a design mentor. Help me...',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.poppins(
                               fontSize: 18,

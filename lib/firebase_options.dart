@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     projectId: 'taskflow-19f2e',
     storageBucket: 'taskflow-19f2e.firebasestorage.app',
     androidClientId: '155073571358-47q7eqrfrtoj505410uj4ounei2m7m4s.apps.googleusercontent.com',
-    iosBundleId: 'com.example.myapp',
+    iosBundleId: 'com.example.WeGoAgain',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -74,7 +74,7 @@ class DefaultFirebaseOptions {
     projectId: 'taskflow-19f2e',
     storageBucket: 'taskflow-19f2e.firebasestorage.app',
     androidClientId: '155073571358-47q7eqrfrtoj505410uj4ounei2m7m4s.apps.googleusercontent.com',
-    iosBundleId: 'com.example.myapp',
+    iosBundleId: 'com.example.WeGoAgain',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
