@@ -2,15 +2,13 @@
 
 **Date:** 2025-10-12
 
-**Version:** 1.3.2
+**Version:** 1.3.3
 
-## Implemented Changes (v1.3.1 -> v1.3.2)
+## Implemented Changes (v1.3.2 -> v1.3.3)
 
 - [x] Fixed compilation errors related to Forui integration:
-    - [x] Corrected `FScaffold` usage (using `header` instead of `appBar`).
-    - [x] Corrected `FButton` usage (removed `variant` and used standard `Icon` widgets).
-    - [x] Replaced `FIcons` members with standard `Icons` from `material.dart`.
-    - [x] Replaced `FColors` members with standard `Colors` from `material.dart`.
+    - [x] Corrected `FAnimatedTheme` usage in `main.dart`.
+    - [x] Corrected `FScaffold` usage (replaced `body` with `child`).
     - [x] Removed `const` from `FText` widgets where it caused errors.
 
 ## Upcoming Features (v1.4.0)

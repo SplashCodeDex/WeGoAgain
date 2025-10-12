@@ -144,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage>
           ),
         ],
       ),
-      body: Stack(
+      child: Stack(
         children: [
           const AnimatedBackground(),
           SafeArea(

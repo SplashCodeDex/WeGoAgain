@@ -14,7 +14,7 @@ class LeaderboardPage extends StatelessWidget {
       header: FAppBar(
         title: FText('Leaderboard'),
       ),
-      body: ListView.builder(
+      child: ListView.builder(
         itemCount: leaderboardService.users.length,
         itemBuilder: (context, index) {
           final user = leaderboardService.users[index];

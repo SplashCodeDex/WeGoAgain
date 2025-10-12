@@ -14,7 +14,7 @@ class AchievementsPage extends StatelessWidget {
       header: FAppBar(
         title: FText('Achievements'),
       ),
-      body: ListView.builder(
+      child: ListView.builder(
         itemCount: achievementService.achievements.length,
         itemBuilder: (context, index) {
           final achievement = achievementService.achievements[index];

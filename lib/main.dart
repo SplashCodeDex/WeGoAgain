@@ -49,14 +49,16 @@ class WeGoAgain extends StatelessWidget {
 
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
-        return MaterialApp(
-          title: 'WeGoAgain',
-          debugShowCheckedModeBanner: false,
-          theme: theme.toApproximateMaterialTheme(),
-          darkTheme: theme.toApproximateMaterialTheme(), // Forui handles dark/light internally
-          themeMode: themeProvider.themeMode,
-          builder: (context, child) => FAnimatedTheme(data: theme, child: child!),
-          home: const MyHomePage(),
+        return FAnimatedTheme(
+          data: theme,
+          child: MaterialApp(
+            title: 'WeGoAgain',
+            debugShowCheckedModeBanner: false,
+            theme: theme.toApproximateMaterialTheme(),
+            darkTheme: theme.toApproximateMaterialTheme(), // Forui handles dark/light internally
+            themeMode: themeProvider.themeMode,
+            home: const MyHomePage(),
+          ),
         );
       },
     );
