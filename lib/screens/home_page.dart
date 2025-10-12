@@ -82,37 +82,33 @@ class _MyHomePageState extends State<MyHomePage>
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return FScaffold(
-      appBar: FAppBar(
+      header: FAppBar(
         title: const FText('WeGoAgain'),
         actions: [
           if (themeProvider.isPro)
             Chip(
               label: const FText('Pro'),
-              backgroundColor: FColors.amber[500],
+              backgroundColor: Colors.amber[500],
             ),
           FButton(
             onPress: _updateQuote,
-            variant: FButtonVariant.ghost,
-            child: const Icon(FIcons.refresh),
+            child: const Icon(Icons.refresh),
           ),
           // FButton(
           //   onPress: () {
           //     Provider.of<InAppPurchaseService>(context, listen: false).buyQuotePack();
           //   },
-          //   variant: FButtonVariant.ghost,
-          //   child: const Icon(FIcons.shoppingCart),
+          //   child: const Icon(Icons.shopping_cart),
           // ),
           // FButton(
           //   onPress: () {
           //     Provider.of<InAppPurchaseService>(context, listen: false).restorePurchases();
           //   },
-          //   variant: FButtonVariant.ghost,
-          //   child: const Icon(FIcons.restore),
+          //   child: const Icon(Icons.restore),
           // ),
           FButton(
             onPress: () => themeProvider.togglePro(),
-            variant: FButtonVariant.ghost,
-            child: Icon(themeProvider.isPro ? FIcons.star : FIcons.starOutline),
+            child: Icon(themeProvider.isPro ? Icons.star : Icons.star_border),
           ),
           FButton(
             onPress: () {
@@ -123,8 +119,7 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               );
             },
-            variant: FButtonVariant.ghost,
-            child: const Icon(FIcons.leaderboard),
+            child: const Icon(Icons.leaderboard),
           ),
           FButton(
             onPress: () {
@@ -135,20 +130,17 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               );
             },
-            variant: FButtonVariant.ghost,
-            child: const Icon(FIcons.emojiEvents),
+            child: const Icon(Icons.emoji_events),
           ),
           FButton(
             onPress: () => themeProvider.toggleTheme(),
-            variant: FButtonVariant.ghost,
             child: Icon(themeProvider.themeMode == ThemeMode.dark
-                ? FIcons.lightMode
-                : FIcons.darkMode),
+                ? Icons.light_mode
+                : Icons.dark_mode),
           ),
           FButton(
             onPress: () => themeProvider.setSystemTheme(),
-            variant: FButtonVariant.ghost,
-            child: const Icon(FIcons.autoMode),
+            child: const Icon(Icons.auto_mode),
           ),
         ],
       ),
@@ -164,12 +156,12 @@ class _MyHomePageState extends State<MyHomePage>
                   const Spacer(flex: 2),
                   FadeTransition(
                     opacity: _fadeAnimation,
-                    child: Text(
+                    child: FText(
                       'I',
                       style: GoogleFonts.lora(
                         fontSize: 48,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFFD95C5C),
+                        color: Colors.red[500],
                       ),
                     ),
                   ),
@@ -182,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage>
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ).createShader(bounds),
-                      child: Text(
+                      child: FText(
                         'WeGoAgain',
                         style: GoogleFonts.poppins(
                           fontSize: 28,
@@ -198,22 +190,22 @@ class _MyHomePageState extends State<MyHomePage>
                     child: SlideTransition(
                       position: _quoteSlideAnimation,
                       child: Padding(
-                        padding: const EdgeInsets.all(24.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            FText(
                               '“',
                               style: GoogleFonts.lora(
                                 fontSize: 48,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFFF97C2D),
+                                color: Colors.orange[500],
                               ),
                               textAlign: TextAlign.start,
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                              child: Text(
+                              child: FText(
                                 _currentQuote,
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.poppins(
@@ -225,13 +217,13 @@ class _MyHomePageState extends State<MyHomePage>
                             ),
                             Align(
                               alignment: Alignment.bottomRight,
-                              child: Text(
+                              child: FText(
                                 '”',
-                                style: GoogleFonts.lora(
-                                  fontSize: 48,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFFF97C2D),
-                                ),
+                              style: GoogleFonts.lora(
+                                fontSize: 48,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange[500],
+                              ),
                               ),
                             ),
                           ],

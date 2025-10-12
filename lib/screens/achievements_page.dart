@@ -11,8 +11,8 @@ class AchievementsPage extends StatelessWidget {
     final achievementService = Provider.of<AchievementService>(context);
 
     return FScaffold(
-      appBar: FAppBar(
-        title: const FText('Achievements'),
+      header: FAppBar(
+        title: FText('Achievements'),
       ),
       body: ListView.builder(
         itemCount: achievementService.achievements.length,
@@ -20,8 +20,8 @@ class AchievementsPage extends StatelessWidget {
           final achievement = achievementService.achievements[index];
           return ListTile(
             leading: Icon(
-              achievement.isUnlocked ? FIcons.lockOpen : FIcons.lock,
-              color: achievement.isUnlocked ? FColors.green[500] : FColors.grey[500],
+              achievement.isUnlocked ? Icons.lock_open : Icons.lock,
+              color: achievement.isUnlocked ? Colors.green : Colors.grey,
             ),
             title: FText(achievement.name),
             subtitle: FText(achievement.description),

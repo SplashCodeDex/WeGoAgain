@@ -11,8 +11,8 @@ class LeaderboardPage extends StatelessWidget {
     final leaderboardService = Provider.of<LeaderboardService>(context);
 
     return FScaffold(
-      appBar: FAppBar(
-        title: const FText('Leaderboard'),
+      header: FAppBar(
+        title: FText('Leaderboard'),
       ),
       body: ListView.builder(
         itemCount: leaderboardService.users.length,
