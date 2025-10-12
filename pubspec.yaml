@@ -39,6 +39,10 @@ dependencies:
   glassmorphism: ^3.0.0
   font_awesome_flutter: ^10.7.0
   flutter_svg: ^2.0.10+1
+  simple_animations: ^5.0.2
+  flutter_haptic: ^0.0.3
+  url_launcher: ^6.3.0
+  flutter_local_notifications: ^17.2.1
   firebase_core: ^4.1.1
   cloud_firestore: ^6.0.2
 

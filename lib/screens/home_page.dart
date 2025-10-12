@@ -1,7 +1,14 @@
+import 'package:WeGoAgain/screens/leaderboard_page.dart';
+import 'package:WeGoAgain/screens/achievements_page.dart';
+import 'package:WeGoAgain/widgets/sponsor_quote.dart';
+import 'package:WeGoAgain/widgets/affiliate_link.dart';
+import 'package:WeGoAgain/providers/theme_provider.dart';
+import 'package:WeGoAgain/widgets/animated_background.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:WeGoAgain/widgets/avatar_card.dart';
 import 'package:WeGoAgain/widgets/footer.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -55,122 +62,174 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFFEF6F1),
-              Color(0xFFF9E9E9),
-            ],
+      appBar: AppBar(
+        title: const Text('WeGoAgain'),
+        actions: [
+          if (themeProvider.isPro)
+            const Chip(
+              label: Text('Pro'),
+              backgroundColor: Colors.amber,
+            ),
+          IconButton(
+            icon: Icon(themeProvider.isPro ? Icons.star : Icons.star_border),
+            onPressed: () => themeProvider.togglePro(),
+            tooltip: 'Toggle Pro',
           ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Spacer(flex: 2),
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Text(
-                    'I',
-                    style: GoogleFonts.lora(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD95C5C),
-                    ),
-                  ),
+          IconButton(
+            icon: const Icon(Icons.leaderboard),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LeaderboardPage(),
                 ),
-                const SizedBox(height: 16),
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: ShaderMask(
-                    shaderCallback: (bounds) => const LinearGradient(
-                      colors: [Color(0xFFF97C2D), Color(0xFFF95B5B)],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ).createShader(bounds),
+              );
+            },
+            tooltip: 'Leaderboard',
+          ),
+          IconButton(
+            icon: const Icon(Icons.emoji_events),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AchievementsPage(),
+                ),
+              );
+            },
+            tooltip: 'Achievements',
+          ),
+          IconButton(
+            icon: Icon(themeProvider.themeMode == ThemeMode.dark
+                ? Icons.light_mode
+                : Icons.dark_mode),
+            onPressed: () => themeProvider.toggleTheme(),
+            tooltip: 'Toggle Theme',
+          ),
+          IconButton(
+            icon: const Icon(Icons.auto_mode),
+            onPressed: () => themeProvider.setSystemTheme(),
+            tooltip: 'Set System Theme',
+          ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          const AnimatedBackground(),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Spacer(flex: 2),
+                  FadeTransition(
+                    opacity: _fadeAnimation,
                     child: Text(
-                      'WeGoAgain',
-                      style: GoogleFonts.poppins(
-                        fontSize: 28,
+                      'I',
+                      style: GoogleFonts.lora(
+                        fontSize: 48,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: const Color(0xFFD95C5C),
                       ),
                     ),
                   ),
-                ),
-                const Spacer(),
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '“',
-                          style: GoogleFonts.lora(
-                            fontSize: 48,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFFF97C2D),
-                          ),
-                          textAlign: TextAlign.start,
+                  const SizedBox(height: 16),
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: ShaderMask(
+                      shaderCallback: (bounds) => const LinearGradient(
+                        colors: [Color(0xFFF97C2D), Color(0xFFF95B5B)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ).createShader(bounds),
+                      child: Text(
+                        'WeGoAgain',
+                        style: GoogleFonts.poppins(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Text(
-                            'Act as a design mentor. Help me...',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              color: Colors.black87,
-                              height: 1.5,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Text(
-                            '”',
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '“',
                             style: GoogleFonts.lora(
                               fontSize: 48,
                               fontWeight: FontWeight.bold,
                               color: const Color(0xFFF97C2D),
                             ),
+                            textAlign: TextAlign.start,
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Text(
+                              'Act as a design mentor. Help me...',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                color: Colors.black87,
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Text(
+                              '”',
+                              style: GoogleFonts.lora(
+                                fontSize: 48,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFFF97C2D),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 32),
-                SizedBox(
-                  height: 60,
-                  width: 220,
-                  child: Stack(
-                    children: List.generate(4, (index) {
-                      return Positioned(
-                        left: index * 40.0,
-                        child: SlideTransition(
-                          position: _slideAnimations[index],
-                          child: AvatarCard(index: index),
-                        ),
-                      );
-                    }),
+                  const AffiliateLink(
+                    url: 'https://www.amazon.com/s?k=motivation+books',
+                    text: 'Find motivational books on Amazon',
                   ),
-                ),
-                const Spacer(flex: 3),
-                const Footer(),
-                const SizedBox(height: 24),
-              ],
+                  const SizedBox(height: 16),
+                  const SponsorQuote(),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    height: 60,
+                    width: 220,
+                    child: Stack(
+                      children: List.generate(4, (index) {
+                        return Positioned(
+                          left: index * 40.0,
+                          child: SlideTransition(
+                            position: _slideAnimations[index],
+                            child: AvatarCard(index: index),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                  const Spacer(flex: 3),
+                  const Footer(),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

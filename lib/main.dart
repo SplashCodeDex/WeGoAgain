@@ -1,3 +1,6 @@
+import 'package:WeGoAgain/services/notification_service.dart';
+import 'package:WeGoAgain/services/leaderboard_service.dart';
+import 'package:WeGoAgain/services/achievement_service.dart';
 import 'package:flutter/material.dart';
 import 'package:WeGoAgain/screens/home_page.dart';
 import 'package:provider/provider.dart';
@@ -11,9 +14,18 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  final NotificationService notificationService = NotificationService();
+  await notificationService.init();
+  await notificationService.scheduleDailyQuoteNotification();
+
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => AchievementService()),
+        ChangeNotifierProvider(create: (context) => LeaderboardService()),
+      ],
       child: const WeGoAgain(),
     ),
   );
