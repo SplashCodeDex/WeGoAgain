@@ -1,3 +1,5 @@
+import 'package:WeGoAgain/services/recommendation_service.dart';
+import 'package:WeGoAgain/services/in_app_purchase_service.dart';
 import 'package:WeGoAgain/services/notification_service.dart';
 import 'package:WeGoAgain/services/leaderboard_service.dart';
 import 'package:WeGoAgain/services/achievement_service.dart';
@@ -19,12 +21,17 @@ void main() async {
   await notificationService.init();
   await notificationService.scheduleDailyQuoteNotification();
 
+  final InAppPurchaseService inAppPurchaseService = InAppPurchaseService();
+  await inAppPurchaseService.initPlatformState();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => AchievementService()),
         ChangeNotifierProvider(create: (context) => LeaderboardService()),
+        ChangeNotifierProvider(create: (context) => inAppPurchaseService),
+        ChangeNotifierProvider(create: (context) => RecommendationService()),
       ],
       child: const WeGoAgain(),
     ),

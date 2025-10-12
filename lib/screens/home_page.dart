@@ -1,3 +1,4 @@
+import 'package:WeGoAgain/services/recommendation_service.dart';
 import 'package:WeGoAgain/screens/leaderboard_page.dart';
 import 'package:WeGoAgain/screens/achievements_page.dart';
 import 'package:WeGoAgain/widgets/sponsor_quote.dart';
@@ -21,7 +22,9 @@ class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
+  late Animation<Offset> _quoteSlideAnimation;
   late List<Animation<Offset>> _slideAnimations;
+  String _currentQuote = '';
 
   @override
   void initState() {
@@ -35,6 +38,13 @@ class _MyHomePageState extends State<MyHomePage>
       CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
+      ),
+    );
+
+    _quoteSlideAnimation = Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.3, 0.8, curve: Curves.easeOutCubic),
       ),
     );
 
@@ -52,6 +62,13 @@ class _MyHomePageState extends State<MyHomePage>
     });
 
     _controller.forward();
+    _updateQuote();
+  }
+
+  void _updateQuote() {
+    setState(() {
+      _currentQuote = Provider.of<RecommendationService>(context, listen: false).getRandomQuote();
+    });
   }
 
   @override
@@ -73,6 +90,25 @@ class _MyHomePageState extends State<MyHomePage>
               label: Text('Pro'),
               backgroundColor: Colors.amber,
             ),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _updateQuote,
+            tooltip: 'New Quote',
+          ),
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Provider.of<InAppPurchaseService>(context, listen: false).buyQuotePack();
+            },
+            tooltip: 'Buy Quote Pack',
+          ),
+          IconButton(
+            icon: const Icon(Icons.restore),
+            onPressed: () {
+              Provider.of<InAppPurchaseService>(context, listen: false).restorePurchases();
+            },
+            tooltip: 'Restore Purchases',
+          ),
           IconButton(
             icon: Icon(themeProvider.isPro ? Icons.star : Icons.star_border),
             onPressed: () => themeProvider.togglePro(),
@@ -159,44 +195,47 @@ class _MyHomePageState extends State<MyHomePage>
                   const Spacer(),
                   FadeTransition(
                     opacity: _fadeAnimation,
-                    child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '“',
-                            style: GoogleFonts.lora(
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFFF97C2D),
-                            ),
-                            textAlign: TextAlign.start,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                            child: Text(
-                              'Act as a design mentor. Help me...',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                fontSize: 18,
-                                color: Colors.black87,
-                                height: 1.5,
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: Text(
-                              '”',
+                    child: SlideTransition(
+                      position: _quoteSlideAnimation,
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '“',
                               style: GoogleFonts.lora(
                                 fontSize: 48,
                                 fontWeight: FontWeight.bold,
                                 color: const Color(0xFFF97C2D),
                               ),
+                              textAlign: TextAlign.start,
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                              child: Text(
+                                _currentQuote,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  color: Colors.black87,
+                                  height: 1.5,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Text(
+                                '”',
+                                style: GoogleFonts.lora(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFFF97C2D),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
