@@ -21,8 +21,8 @@ void main() async {
   await notificationService.init();
   await notificationService.scheduleDailyQuoteNotification();
 
-  final InAppPurchaseService inAppPurchaseService = InAppPurchaseService();
-  await inAppPurchaseService.initPlatformState();
+  // final InAppPurchaseService inAppPurchaseService = InAppPurchaseService();
+  // await inAppPurchaseService.initPlatformState();
 
   runApp(
     MultiProvider(
@@ -30,7 +30,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => AchievementService()),
         ChangeNotifierProvider(create: (context) => LeaderboardService()),
-        ChangeNotifierProvider(create: (context) => inAppPurchaseService),
+        // ChangeNotifierProvider(create: (context) => inAppPurchaseService),
         ChangeNotifierProvider(create: (context) => RecommendationService()),
       ],
       child: const WeGoAgain(),

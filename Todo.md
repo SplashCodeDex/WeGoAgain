@@ -2,23 +2,12 @@
 
 **Date:** 2025-10-12
 
-**Version:** 1.2.0
+**Version:** 1.2.1
 
-## Implemented Changes (v1.1.0 -> v1.2.0)
+## Implemented Changes (v1.2.0 -> v1.2.1)
 
-- [x] **UI/UX Improvements:**
-    - [x] Quote Transition Animations
-- [x] **Monetization Strategies:**
-    - [x] "Pro" Version
-    - [x] Affiliate Links
-    - [x] "Sponsor a Quote" Feature
-    - [x] Quote Packs (In-App Purchase)
-- [x] **Gamification:**
-    - [x] Achievement Badges
-    - [x] Leaderboards
-- [x] **Feature Enhancement:**
-    - [x] "Quote of the Day" Notifications
-    - [x] Personalized Quote Recommendations
+- [x] Removed "Find motivational books on Amazon" (AffiliateLink) feature.
+- [x] Removed "Sponsor a Quote" feature.
 
 ## Upcoming Features (v1.3.0)
 

@@ -1,8 +1,7 @@
+import 'package:WeGoAgain/services/in_app_purchase_service.dart';
 import 'package:WeGoAgain/services/recommendation_service.dart';
 import 'package:WeGoAgain/screens/leaderboard_page.dart';
 import 'package:WeGoAgain/screens/achievements_page.dart';
-import 'package:WeGoAgain/widgets/sponsor_quote.dart';
-import 'package:WeGoAgain/widgets/affiliate_link.dart';
 import 'package:WeGoAgain/providers/theme_provider.dart';
 import 'package:WeGoAgain/widgets/animated_background.dart';
 import 'package:flutter/material.dart';
@@ -95,20 +94,20 @@ class _MyHomePageState extends State<MyHomePage>
             onPressed: _updateQuote,
             tooltip: 'New Quote',
           ),
-          IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: () {
-              Provider.of<InAppPurchaseService>(context, listen: false).buyQuotePack();
-            },
-            tooltip: 'Buy Quote Pack',
-          ),
-          IconButton(
-            icon: const Icon(Icons.restore),
-            onPressed: () {
-              Provider.of<InAppPurchaseService>(context, listen: false).restorePurchases();
-            },
-            tooltip: 'Restore Purchases',
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.shopping_cart),
+          //   onPressed: () {
+          //     Provider.of<InAppPurchaseService>(context, listen: false).buyQuotePack();
+          //   },
+          //   tooltip: 'Buy Quote Pack',
+          // ),
+          // IconButton(
+          //   icon: const Icon(Icons.restore),
+          //   onPressed: () {
+          //     Provider.of<InAppPurchaseService>(context, listen: false).restorePurchases();
+          //   },
+          //   tooltip: 'Restore Purchases',
+          // ),
           IconButton(
             icon: Icon(themeProvider.isPro ? Icons.star : Icons.star_border),
             onPressed: () => themeProvider.togglePro(),
@@ -239,12 +238,6 @@ class _MyHomePageState extends State<MyHomePage>
                       ),
                     ),
                   ),
-                  const AffiliateLink(
-                    url: 'https://www.amazon.com/s?k=motivation+books',
-                    text: 'Find motivational books on Amazon',
-                  ),
-                  const SizedBox(height: 16),
-                  const SponsorQuote(),
                   const SizedBox(height: 32),
                   SizedBox(
                     height: 60,
