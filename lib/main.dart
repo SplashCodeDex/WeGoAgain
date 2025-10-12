@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/screens/home_page.dart';
+import 'package:WeGoAgain/screens/home_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const WeGoAgain());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class WeGoAgain extends StatelessWidget {
+  const WeGoAgain({super.key});
 
   @override
   Widget build(BuildContext context) {
