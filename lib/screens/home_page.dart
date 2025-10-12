@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:WeGoAgain/widgets/avatar_card.dart';
 import 'package:WeGoAgain/widgets/footer.dart';
 import 'package:provider/provider.dart';
+import 'package:forui/forui.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -80,42 +81,41 @@ class _MyHomePageState extends State<MyHomePage>
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('WeGoAgain'),
+    return FScaffold(
+      appBar: FAppBar(
+        title: const FText('WeGoAgain'),
         actions: [
           if (themeProvider.isPro)
-            const Chip(
-              label: Text('Pro'),
-              backgroundColor: Colors.amber,
+            Chip(
+              label: const FText('Pro'),
+              backgroundColor: FColors.amber[500],
             ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _updateQuote,
-            tooltip: 'New Quote',
+          FButton(
+            onPress: _updateQuote,
+            variant: FButtonVariant.ghost,
+            child: const Icon(FIcons.refresh),
           ),
-          // IconButton(
-          //   icon: const Icon(Icons.shopping_cart),
-          //   onPressed: () {
+          // FButton(
+          //   onPress: () {
           //     Provider.of<InAppPurchaseService>(context, listen: false).buyQuotePack();
           //   },
-          //   tooltip: 'Buy Quote Pack',
+          //   variant: FButtonVariant.ghost,
+          //   child: const Icon(FIcons.shoppingCart),
           // ),
-          // IconButton(
-          //   icon: const Icon(Icons.restore),
-          //   onPressed: () {
+          // FButton(
+          //   onPress: () {
           //     Provider.of<InAppPurchaseService>(context, listen: false).restorePurchases();
           //   },
-          //   tooltip: 'Restore Purchases',
+          //   variant: FButtonVariant.ghost,
+          //   child: const Icon(FIcons.restore),
           // ),
-          IconButton(
-            icon: Icon(themeProvider.isPro ? Icons.star : Icons.star_border),
-            onPressed: () => themeProvider.togglePro(),
-            tooltip: 'Toggle Pro',
+          FButton(
+            onPress: () => themeProvider.togglePro(),
+            variant: FButtonVariant.ghost,
+            child: Icon(themeProvider.isPro ? FIcons.star : FIcons.starOutline),
           ),
-          IconButton(
-            icon: const Icon(Icons.leaderboard),
-            onPressed: () {
+          FButton(
+            onPress: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -123,11 +123,11 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               );
             },
-            tooltip: 'Leaderboard',
+            variant: FButtonVariant.ghost,
+            child: const Icon(FIcons.leaderboard),
           ),
-          IconButton(
-            icon: const Icon(Icons.emoji_events),
-            onPressed: () {
+          FButton(
+            onPress: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -135,19 +135,20 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               );
             },
-            tooltip: 'Achievements',
+            variant: FButtonVariant.ghost,
+            child: const Icon(FIcons.emojiEvents),
           ),
-          IconButton(
-            icon: Icon(themeProvider.themeMode == ThemeMode.dark
-                ? Icons.light_mode
-                : Icons.dark_mode),
-            onPressed: () => themeProvider.toggleTheme(),
-            tooltip: 'Toggle Theme',
+          FButton(
+            onPress: () => themeProvider.toggleTheme(),
+            variant: FButtonVariant.ghost,
+            child: Icon(themeProvider.themeMode == ThemeMode.dark
+                ? FIcons.lightMode
+                : FIcons.darkMode),
           ),
-          IconButton(
-            icon: const Icon(Icons.auto_mode),
-            onPressed: () => themeProvider.setSystemTheme(),
-            tooltip: 'Set System Theme',
+          FButton(
+            onPress: () => themeProvider.setSystemTheme(),
+            variant: FButtonVariant.ghost,
+            child: const Icon(FIcons.autoMode),
           ),
         ],
       ),
