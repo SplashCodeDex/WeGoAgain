@@ -5,13 +5,49 @@ import 'dart:math';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myapp/favorites_screen.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:rxdart/subjects.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final BehaviorSubject<String?> selectNotificationSubject = BehaviorSubject<String?>();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await _configureLocalNotifications();
+  tz.initializeTimeZones();
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
       child: const MyApp(),
     ),
+  );
+}
+
+Future<void> _configureLocalNotifications() async {
+  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+  const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings();
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: initializationSettingsIOS,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
+      selectNotificationSubject.add(notificationResponse.payload);
+    },
+  );
+
+  await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
+  await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
+    alert: true,
+    badge: true,
+    sound: true,
   );
 }
 
@@ -73,6 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _initPrefs();
+    _scheduleDailyQuoteNotification();
+    _listenForNotifications();
   }
 
   Future<void> _initPrefs() async {
@@ -108,6 +146,51 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   bool get _isFavorite => _favoriteQuotes.contains(_currentQuote);
+
+  Future<void> _scheduleDailyQuoteNotification() async {
+    final random = Random();
+    final quote = _quotes[random.nextInt(_quotes.length)];
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      'Quote of the Day',
+      quote,
+      _nextInstanceOfTenAM(),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'daily_quote_channel',
+          'Daily Quote Notifications',
+          channelDescription: 'Channel for daily inspirational quotes',
+          importance: Importance.low,
+          priority: Priority.low,
+        ),
+        iOS: DarwinNotificationDetails(),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+      payload: quote,
+    );
+  }
+
+  tz.TZDateTime _nextInstanceOfTenAM() {
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, 10);
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+    return scheduledDate;
+  }
+
+  void _listenForNotifications() {
+    selectNotificationSubject.stream.listen((String? payload) async {
+      if (payload != null && payload.isNotEmpty) {
+        setState(() {
+          _currentQuote = payload;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
