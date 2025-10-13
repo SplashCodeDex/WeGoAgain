@@ -1,6 +1,6 @@
-# myapp
+# WeGoAgain
 
-A new Flutter project.
+A Flutter project to demonstrate my skills and explore new ideas. Let's go again!
 
 ## Getting Started
 

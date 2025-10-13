@@ -1,5 +1,5 @@
-name: myapp
-description: "A new Flutter project."
+name: wegoagain
+description: "A Flutter project to demonstrate my skills and explore new ideas. Let's go again!"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^6.3.2
   provider: ^6.1.5+1
+  forui: ^0.16.0
 
 dev_dependencies:
   flutter_test:
