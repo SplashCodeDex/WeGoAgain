@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:forui/forui.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'dart:math';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:myapp/favorites_screen.dart';
+import 'package:swipable_stack/swipable_stack.dart';
+import 'package:wegoagain/favorites_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -15,10 +18,8 @@ final BehaviorSubject<String?> selectNotificationSubject = BehaviorSubject<Strin
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await _configureLocalNotifications();
   tz.initializeTimeZones();
-
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
@@ -30,19 +31,16 @@ void main() async {
 Future<void> _configureLocalNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
   const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings();
-
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
     iOS: initializationSettingsIOS,
   );
-
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
     onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
       selectNotificationSubject.add(notificationResponse.payload);
     },
   );
-
   await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
   await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
     alert: true,
@@ -52,12 +50,17 @@ Future<void> _configureLocalNotifications() async {
 }
 
 class ThemeProvider with ChangeNotifier {
-  ThemeMode _themeMode = ThemeMode.dark;
+  ThemeMode _themeMode = ThemeMode.system;
 
   ThemeMode get themeMode => _themeMode;
 
   void toggleTheme() {
     _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    notifyListeners();
+  }
+
+    void setSystemTheme() {
+    _themeMode = ThemeMode.system;
     notifyListeners();
   }
 }
@@ -67,15 +70,70 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final theme = themeProvider.themeMode == ThemeMode.light ? FThemes.zinc.light : FThemes.zinc.dark;
+    const Color primarySeedColor = Colors.deepPurple;
+    final TextTheme appTextTheme = TextTheme(
+      displayLarge: GoogleFonts.oswald(fontSize: 57, fontWeight: FontWeight.bold),
+      titleLarge: GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.w500),
+      bodyMedium: GoogleFonts.openSans(fontSize: 14),
+      headlineSmall: GoogleFonts.roboto(fontSize: 24, fontWeight: FontWeight.w400),
+    );
 
-    return MaterialApp(
-      supportedLocales: FLocalizations.supportedLocales,
-      localizationsDelegates: const [...FLocalizations.localizationsDelegates],
-      theme: theme.toApproximateMaterialTheme(),
-      builder: (_, child) => FAnimatedTheme(data: theme, child: child!),
-      home: const MyHomePage(),
+    final ThemeData lightTheme = ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primarySeedColor,
+        brightness: Brightness.light,
+      ),
+      textTheme: appTextTheme,
+      appBarTheme: AppBarTheme(
+        backgroundColor: primarySeedColor,
+        foregroundColor: Colors.white,
+        titleTextStyle: GoogleFonts.oswald(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: primarySeedColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          textStyle: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
+
+    final ThemeData darkTheme = ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primarySeedColor,
+        brightness: Brightness.dark,
+      ),
+      textTheme: appTextTheme,
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.grey[900],
+        foregroundColor: Colors.white,
+        titleTextStyle: GoogleFonts.oswald(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.black,
+          backgroundColor: Colors.deepPurple.shade200,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          textStyle: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
+
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'WeGoAgain',
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: themeProvider.themeMode,
+          home: const MyHomePage(),
+        );
+      },
     );
   }
 }
@@ -88,7 +146,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<String> _quotes = [
+  late SwipableStackController _controller;
+  bool _isLoading = true;
+  List<String> _quotes = [
     "The only way to do great work is to love what you do.",
     "Believe you can and you're halfway there.",
     "The future belongs to those who believe in the beauty of their dreams.",
@@ -101,17 +161,81 @@ class _MyHomePageState extends State<MyHomePage> {
     "We go again."
   ];
 
-  String _currentQuote = "The only way to do great work is to love what you do.";
+  String _currentQuote = "";
   Set<String> _favoriteQuotes = {};
   SharedPreferences? _prefs;
 
   @override
   void initState() {
     super.initState();
-    _initPrefs();
+    _controller = SwipableStackController();
+    _initApp();
+  }
+
+  Future<void> _initApp() async {
+    await _initPrefs();
+    await _loadQuote();
     _scheduleDailyQuoteNotification();
     _listenForNotifications();
   }
+
+  Future<void> _loadQuote() async {
+    final today = DateUtils.dateOnly(DateTime.now()).toIso8601String();
+    final cachedDate = _prefs?.getString('quoteDate');
+    final cachedQuote = _prefs?.getString('quoteOfTheDay');
+
+    if (cachedDate == today && cachedQuote != null) {
+      _setupQuotes(cachedQuote);
+    } else {
+      await _fetchQuoteOfTheDay();
+    }
+  }
+
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchQuoteOfTheDay() async {
+    try {
+      final response = await http.get(Uri.parse('https://zenquotes.io/api/today'));
+      if (response.statusCode == 200) {
+        final List<dynamic> json = jsonDecode(response.body);
+        if (json.isNotEmpty) {
+          final quote = json[0]['q'] as String;
+          final author = json[0]['a'] as String;
+          final formattedQuote = '"$quote" - $author';
+
+          final today = DateUtils.dateOnly(DateTime.now()).toIso8601String();
+          await _prefs?.setString('quoteOfTheDay', formattedQuote);
+          await _prefs?.setString('quoteDate', today);
+
+          _setupQuotes(formattedQuote);
+        } else {
+           _setupQuotes(null);
+        }
+      } else {
+        _setupQuotes(null);
+      }
+    } catch (e) {
+       _setupQuotes(null);
+    }
+  }
+
+  void _setupQuotes(String? dailyQuote) {
+      final tempQuotes = List<String>.from(_quotes);
+      if (dailyQuote != null && !tempQuotes.contains(dailyQuote)) {
+        tempQuotes.insert(0, dailyQuote);
+      }
+      setState(() {
+        _quotes = tempQuotes;
+        _currentQuote = _quotes.isNotEmpty ? _quotes[0] : "";
+        _isLoading = false;
+      });
+  }
+
 
   Future<void> _initPrefs() async {
     _prefs = await SharedPreferences.getInstance();
@@ -124,9 +248,11 @@ class _MyHomePageState extends State<MyHomePage> {
     await _prefs?.setStringList('favoriteQuotes', _favoriteQuotes.toList());
   }
 
-  void _newQuote() {
+  void _updateCurrentQuote(int index) {
     setState(() {
-      _currentQuote = _quotes[Random().nextInt(_quotes.length)];
+      if (index < _quotes.length) {
+        _currentQuote = _quotes[index % _quotes.length];
+      }
     });
   }
 
@@ -148,8 +274,20 @@ class _MyHomePageState extends State<MyHomePage> {
   bool get _isFavorite => _favoriteQuotes.contains(_currentQuote);
 
   Future<void> _scheduleDailyQuoteNotification() async {
-    final random = Random();
-    final quote = _quotes[random.nextInt(_quotes.length)];
+    String quote = _quotes[Random().nextInt(_quotes.length)];
+    try {
+      final response = await http.get(Uri.parse('https://zenquotes.io/api/today'));
+      if (response.statusCode == 200) {
+        final List<dynamic> json = jsonDecode(response.body);
+        if (json.isNotEmpty) {
+          final fetchedQuote = json[0]['q'] as String;
+          final author = json[0]['a'] as String;
+          quote = '"$fetchedQuote" - $author';
+        }
+      }
+    } catch (e) {
+      // Fallback to a random quote if API fails
+    }
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
@@ -167,7 +305,6 @@ class _MyHomePageState extends State<MyHomePage> {
         iOS: DarwinNotificationDetails(),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
       payload: quote,
     );
@@ -187,6 +324,10 @@ class _MyHomePageState extends State<MyHomePage> {
       if (payload != null && payload.isNotEmpty) {
         setState(() {
           _currentQuote = payload;
+           if (!_quotes.contains(payload)) {
+            _quotes.insert(0, payload);
+          }
+          _controller.rewind();
         });
       }
     });
@@ -195,69 +336,87 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final theme = FTheme.of(context);
 
-    return FScaffold(
-      header: FHeader(
+    return Scaffold(
+      appBar: AppBar(
         title: const Text('WeGoAgain'),
-        suffixes: [
-          FHeaderAction(
+        actions: [
+          IconButton(
             icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
-            onPress: _toggleFavorite,
-            tooltip: _isFavorite ? 'Remove from Favorites' : 'Add to Favorites',
+            onPressed: _toggleFavorite,
+            tooltip: 'Favorite',
           ),
-          FHeaderAction(
+          IconButton(
             icon: const Icon(Icons.list),
-            onPress: () {
+            onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => FavoritesScreen(favoriteQuotes: _favoriteQuotes.toList())));
             },
-            tooltip: 'View Favorites',
+            tooltip: 'Favorites',
           ),
-          FHeaderAction(
+          IconButton(
             icon: Icon(themeProvider.themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode),
-            onPress: () => themeProvider.toggleTheme(),
+            onPressed: () => themeProvider.toggleTheme(),
             tooltip: 'Toggle Theme',
           ),
         ],
       ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 48.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return FadeTransition(opacity: animation, child: child);
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Center(
+              child: SwipableStack(
+                controller: _controller,
+                onSwipeCompleted: (index, direction) {
+                  final swipedQuote = _quotes[index % _quotes.length];
+                  setState(() {
+                    if (direction == SwipeDirection.right) {
+                      _favoriteQuotes.add(swipedQuote);
+                    } else if (direction == SwipeDirection.left) {
+                      _favoriteQuotes.remove(swipedQuote);
+                    }
+                    _saveFavorites();
+                  });
+                  _updateCurrentQuote(index + 1);
                 },
-                child: Text(
-                  _currentQuote,
-                  key: ValueKey<String>(_currentQuote),
-                  textAlign: TextAlign.center,
-                  style: theme.typography.base.copyWith(
-                    color: themeProvider.themeMode == ThemeMode.dark ? Colors.white : Colors.black,
-                  ),
-                ),
+                builder: (context, properties) {
+                  final quote = _quotes[properties.index % _quotes.length];
+                  return Stack(
+                    children: [
+                      Card(
+                        elevation: 4.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(32.0),
+                          child: Center(
+                            child: Text(
+                              quote,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headlineSmall,
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (properties.swipeProgress > 0)
+                        Center(
+                          child: Opacity(
+                            opacity: properties.swipeProgress,
+                            child: Icon(
+                              properties.direction == SwipeDirection.right ? Icons.favorite : Icons.close,
+                              color: properties.direction == SwipeDirection.right ? Colors.green : Colors.red,
+                              size: 100,
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
               ),
-              const SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FButton(
-                    onPress: _newQuote,
-                    child: const Text('Another One'),
-                  ),
-                  const SizedBox(width: 16),
-                  FButton(
-                    onPress: _shareQuote,
-                    child: const Text('Share'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _shareQuote,
+        child: const Icon(Icons.share),
+        tooltip: 'Share Quote',
       ),
     );
   }

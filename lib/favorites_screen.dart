@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:forui/forui.dart';
 
 class FavoritesScreen extends StatelessWidget {
   final List<String> favoriteQuotes;
@@ -8,32 +7,31 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = FTheme.of(context);
-
-    return FScaffold(
-      header: FHeader(
+    return Scaffold(
+      appBar: AppBar(
         title: const Text('Favorite Quotes'),
       ),
-      child: favoriteQuotes.isEmpty
-          ? Center(
+      body: favoriteQuotes.isEmpty
+          ? const Center(
               child: Text(
-                'No favorite quotes yet!',
-                style: theme.typography.base.copyWith(
-                  color: theme.colors.foreground,
-                ),
+                'You have no favorite quotes yet.',
+                style: TextStyle(fontSize: 18.0),
               ),
             )
           : ListView.builder(
               itemCount: favoriteQuotes.length,
               itemBuilder: (context, index) {
-                return FCard(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
+                return Card(
+                  margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  elevation: 2.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(16.0),
+                    title: Text(
                       favoriteQuotes[index],
-                      style: theme.typography.base.copyWith(
-                        color: theme.colors.foreground,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
                 );
