@@ -85,42 +85,30 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              theme.colors.primary,
-              theme.colors.secondary,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                child: Text(
+                  _currentQuote,
+                  key: ValueKey<String>(_currentQuote),
+                  textAlign: TextAlign.center,
+                  style: theme.typography.base.copyWith(color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 40),
+              FButton(
+                onPress: _newQuote,
+                child: const Text('Another One'),
+              ),
             ],
-          ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 500),
-                  transitionBuilder: (Widget child, Animation<double> animation) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  child: Text(
-                    _currentQuote,
-                    key: ValueKey<String>(_currentQuote),
-                    textAlign: TextAlign.center,
-                    style: theme.typography.base.copyWith(color: Colors.white),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                FButton(
-                  onPress: _newQuote,
-                  child: const Text('Another One'),
-                ),
-              ],
-            ),
           ),
         ),
       ),
