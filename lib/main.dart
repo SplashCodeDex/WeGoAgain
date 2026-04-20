@@ -36,7 +36,7 @@ Future<void> _configureLocalNotifications() async {
     iOS: initializationSettingsIOS,
   );
   await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings: initializationSettings,
+    settings: initializationSettings,
     onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
       selectNotificationSubject.add(notificationResponse.payload);
     },
@@ -257,7 +257,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _shareQuote() {
-    Share.share(_currentQuote);
+    SharePlus.instance.share(
+      ShareParams(text: _currentQuote),
+    );
   }
 
   void _toggleFavorite() {
@@ -287,6 +289,8 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     } catch (e) {
       // Fallback to a random quote if API fails
+    }
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id: 0,
       title: 'Quote of the Day',
@@ -303,17 +307,12 @@ class _MyHomePageState extends State<MyHomePage> {
         iOS: DarwinNotificationDetails(),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
       payload: quote,
     );
-    }
+  }
 
-    void _shareQuote() {
-    Share.share(
-      _currentQuote,
-    );
-    }
+  tz.TZDateTime _nextInstanceOfTenAM() {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, 10);
     if (scheduledDate.isBefore(now)) {
