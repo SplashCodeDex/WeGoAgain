@@ -1,0 +1,10 @@
+{
+  "projectId": "momo-companion",
+  "appId": "1:268196543476:web:2fcc58c383699b253297a1",
+  "apiKey": "AIzaSyC1jqTqWfzOkhsJA78IXV4xJbwOByvPcJE",
+  "authDomain": "momo-companion.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-eb53ef42-b9b6-4ec4-a7f1-303d24c0340d",
+  "storageBucket": "momo-companion.firebasestorage.app",
+  "messagingSenderId": "268196543476",
+  "measurementId": ""
+}

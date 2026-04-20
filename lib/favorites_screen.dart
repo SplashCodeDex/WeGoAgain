@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FavoritesScreen extends StatelessWidget {
-  final List<String> favoriteQuotes;
-
-  const FavoritesScreen({super.key, required this.favoriteQuotes});
+  final List<String> favoriteIds;
+  const FavoritesScreen({super.key, required this.favoriteIds});
 
   @override
   Widget build(BuildContext context) {
@@ -11,15 +10,15 @@ class FavoritesScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Favorite Quotes'),
       ),
-      body: favoriteQuotes.isEmpty
+      body: favoriteIds.isEmpty
           ? const Center(
               child: Text(
-                'You have no favorite quotes yet.',
+                'You have no saved truths yet.',
                 style: TextStyle(fontSize: 18.0),
               ),
             )
           : ListView.builder(
-              itemCount: favoriteQuotes.length,
+              itemCount: favoriteIds.length,
               itemBuilder: (context, index) {
                 return Card(
                   margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -30,7 +29,7 @@ class FavoritesScreen extends StatelessWidget {
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(16.0),
                     title: Text(
-                      favoriteQuotes[index],
+                      'Saved Truth ID: ${favoriteIds[index]}',
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),

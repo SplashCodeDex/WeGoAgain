@@ -1,0 +1,23 @@
+{
+  "entities": {
+    "Truth": {
+      "title": "Truth",
+      "description": "A hard truth, actionable tip, or mental model.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "The headline or core rule." },
+        "content": { "type": "string", "description": "The detailed explanation or steps." },
+        "category": { "type": "string", "description": "e.g., Hard Truth, Actionable Tip, Philosophy" },
+        "source": { "type": "string", "description": "Reddit/Quora url or author." },
+        "createdAt": { "type": "number", "description": "Unix timestamp of creation." }
+      },
+      "required": ["title", "content", "category", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/truths": {
+      "schema": { "$ref": "#/entities/Truth" },
+      "description": "Collection of hard truths and mental models."
+    }
+  }
+}
