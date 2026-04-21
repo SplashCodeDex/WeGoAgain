@@ -8,7 +8,14 @@ plugins {
 android {
     namespace = "com.example.wegoagain"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    buildToolsVersion = "37.0.0"
+    ndkVersion = "30.0.14904198"
+
+    externalNativeBuild {
+        cmake {
+            version = "4.1.2"
+        }
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -45,5 +52,5 @@ flutter {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

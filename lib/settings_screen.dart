@@ -39,11 +39,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
     await _prefs?.setInt('notificationHour', newTime.hour);
     await _prefs?.setInt('notificationMinute', newTime.minute);
-    // Reschedule notification with new time
-    // This will be handled in main.dart by making _scheduleDailyQuoteNotification accessible.
-    // For now, we'll just call the main.dart's function directly (will need to be made static or accessible).
-    // This is a temporary placeholder for rescheduling.
-    // We will refine this in main.dart after this file is created.
   }
 
   @override
@@ -58,27 +53,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          FItem(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Dark Mode', style: theme.typography.base),
-                FSwitch(
+          FItemGroup(
+            children: [
+              FItem(
+                title: Text('Dark Mode', style: theme.typography.md),
+                suffix: FSwitch(
                   value: themeProvider.themeMode == ThemeMode.dark,
-                  onChanged: (value) {
+                  onChange: (value) {
                     themeProvider.toggleTheme();
                   },
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          FItem(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Daily Quote Time', style: theme.typography.base),
-                FButton(
+              ),
+              FItem(
+                title: Text('Daily Quote Time', style: theme.typography.md),
+                suffix: FButton(
                   onPress: () async {
                     final TimeOfDay? picked = await showTimePicker(
                       context: context,
@@ -86,14 +74,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     );
                     if (picked != null && picked != _notificationTime) {
                       await _saveNotificationTime(picked);
-                      // Trigger reschedule of notification in main.dart
-                      // This will be handled by making _scheduleDailyQuoteNotification accessible.
                     }
                   },
                   child: Text(_notificationTime.format(context)),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

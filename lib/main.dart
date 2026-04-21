@@ -417,8 +417,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: _shareQuote,
-        child: const Icon(Icons.share),
         tooltip: 'Share Quote',
+        child: const Icon(Icons.share),
       ),
     );
   }
